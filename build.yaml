@@ -20,6 +20,11 @@
 ---
 include:
   - board: nice_nano_v2
-    shield: lily58_left
+    shield: lily58_left nice_view_adapter nice_view
+    artifact-name: allium58_left_niceview
   - board: nice_nano_v2
-    shield: lily58_right
+    shield: lily58_right nice_view_adapter nice_view
+    artifact-name: allium58_right_niceview
+  - board: nice_nano_v2
+    shield: settings_reset
+    artifact-name: settings_reset
