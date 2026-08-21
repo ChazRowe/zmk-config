@@ -6,7 +6,7 @@
  */
 
 #include <behaviors.dtsi>
-#include <persistent_default_layer.dtsi>
+#include <behaviors/persistent_default_layer.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 
