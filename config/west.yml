@@ -12,6 +12,6 @@ manifest:
       import: app/west.yml
     - name: zmk-persistent-default-layer
       remote: chazrowe
-      revision: 5a0cfa8623fbe005d39c94192a6b5cf969856725
+      revision: d2b21e5a03ec31db80a511f068e373e59d13e788
   self:
     path: config
