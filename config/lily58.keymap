@@ -6,14 +6,17 @@
  */
 
 #include <behaviors.dtsi>
+#include <persistent_default_layer.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 
-#define BASE 0
-#define LOWER 1
-#define RAISE 2
-#define NUMPAD 3
-#define ADJUST 4
+#define DVORAK 0
+#define QWERTY 1
+#define COLEMAK 2
+#define LOWER 3
+#define RAISE 4
+#define NUMPAD 5
+#define ADJUST 6
 
 /*
  * Deliberately improbable shortcut namespace used by the eight low-profile
@@ -68,21 +71,51 @@
     keymap {
         compatible = "zmk,keymap";
 
-        base_layer {
-            display-name = "Base";
+        dvorak_layer {
+            display-name = "Dvorak";
 // Planck rows are shifted onto the top four Lily58 rows. The two keys under
 // the displays hold Chaz's six-modifier Meta chord. The low-profile thumb
 // keys send that same chord plus F1-F8, from left to right.
 // ------------------------------------------------------------------------------------------------------------
+// | TAB  |  '   |  ,   |  .   |  P   |  Y   |                   |  F   |  G   |  C   |  R   |  L   | ESC       |
+// | BSPC |  A   |  O   |  E   |  U   |  I   |                   |  D   |  H   |  T   |  N   |  S   | /         |
+// | LSHF |  ;   |  Q   |  J   |  K   |  X   |                   |  B   |  M   |  W   |  V   |  Z   | RSHF/ENT  |
+// | LCTL | LGUI | LALT | LALT | LOWER| SPC/NP|   META   | | META | SPACE| RAISE| LEFT | DOWN | UP   | RCTL/RIGHT|
+//                             | M+F1 | M+F2 | M+F3 | M+F4 | | M+F5 | M+F6 | M+F7 | M+F8 |
+            bindings = <
+&kp TAB   &kp SQT  &kp COMMA &kp DOT &kp P &kp Y                            &kp F &kp G &kp C &kp R &kp L &kp ESC
+&kp BSPC  &kp A    &kp O     &kp E   &kp U &kp I                            &kp D &kp H &kp T &kp N &kp S &kp FSLH
+&kp LSHFT &kp SEMI &kp Q     &kp J   &kp K &kp X                            &kp B &kp M &kp W &kp V &kp Z &mt RSHIFT ENTER
+&kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
+                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp CHAZ_META(F3) &kp CHAZ_META(F4) &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
+            >;
+        };
+
+        qwerty_layer {
+            display-name = "QWERTY";
+// ------------------------------------------------------------------------------------------------------------
 // | TAB  |  Q   |  W   |  E   |  R   |  T   |                   |  Y   |  U   |  I   |  O   |  P   | ESC       |
 // | BSPC |  A   |  S   |  D   |  F   |  G   |                   |  H   |  J   |  K   |  L   |  ;   | '         |
 // | LSHF |  Z   |  X   |  C   |  V   |  B   |                   |  N   |  M   |  ,   |  .   |  /   | RSHF/ENT  |
-// | LCTL | LGUI | LALT | LALT | LOWER| SPC/NP|   META   | | META | SPACE| RAISE| LEFT | DOWN | UP   | RCTL/RIGHT|
-//                             | M+F1 | M+F2 | M+F3 | M+F4 | | M+F5 | M+F6 | M+F7 | M+F8 |
             bindings = <
 &kp TAB   &kp Q    &kp W    &kp E    &kp R    &kp T                         &kp Y     &kp U     &kp I     &kp O     &kp P     &kp ESC
 &kp BSPC  &kp A    &kp S    &kp D    &kp F    &kp G                         &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp SQT
 &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B                         &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &mt RSHIFT ENTER
+&kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
+                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp CHAZ_META(F3) &kp CHAZ_META(F4) &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
+            >;
+        };
+
+        colemak_layer {
+            display-name = "Colemak";
+// ------------------------------------------------------------------------------------------------------------
+// | TAB  |  Q   |  W   |  F   |  P   |  G   |                   |  J   |  L   |  U   |  Y   |  ;   | ESC       |
+// | BSPC |  A   |  R   |  S   |  T   |  D   |                   |  H   |  N   |  E   |  I   |  O   | '         |
+// | LSHF |  Z   |  X   |  C   |  V   |  B   |                   |  K   |  M   |  ,   |  .   |  /   | RSHF/ENT  |
+            bindings = <
+&kp TAB   &kp Q    &kp W    &kp F    &kp P    &kp G                         &kp J     &kp L     &kp U     &kp Y     &kp SEMI  &kp ESC
+&kp BSPC  &kp A    &kp R    &kp S    &kp T    &kp D                         &kp H     &kp N     &kp E     &kp I     &kp O     &kp SQT
+&kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B                         &kp K     &kp M     &kp COMMA &kp DOT   &kp FSLH  &mt RSHIFT ENTER
 &kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
                               &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp CHAZ_META(F3) &kp CHAZ_META(F4) &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
             >;
@@ -139,12 +172,14 @@
         adjust_layer {
             display-name = "Adjust";
 // Bluetooth lives here so no Lower key is displaced. Profiles are zero-based
-// internally but labeled BT1-BT5 in normal user-facing terms.
+// internally but labeled BT1-BT5 in normal user-facing terms. Layout changes
+// use the persistent-default-layer behavior and survive power cycles.
 // ------------------------------------------------------------------------------------------------------------
 // |BTCLR | BT1  | BT2  | BT3  | BT4  | BT5  |                   | BTPRV| BTNEXT|      |      | RESET| BOOT |
+// |      |      |      |      |      |      |                   |      |QWERTY|COLEMK|DVORAK|      |      |
             bindings = <
 &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4    &bt BT_PRV &bt BT_NXT &none &none &sys_reset &bootloader
-&trans &trans &trans &trans &trans &trans                                           &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans                                           &trans &pdf QWERTY &pdf COLEMAK &pdf DVORAK &trans &trans
 &trans &trans &trans &trans &trans &trans                                           &trans &trans &trans &trans &trans &trans
 &trans &trans &trans &trans &trans &trans                   &trans &trans            &trans &trans &trans &trans &trans &trans
                         &trans &trans &trans &trans &trans &trans &trans &trans
