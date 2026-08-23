@@ -38,6 +38,27 @@ firmware** run, download its `firmware` artifact, and unzip it. It contains:
 - `allium58_right_niceview.uf2`
 - `settings_reset.uf2` (recovery only)
 
+On Linux, the repository helpers download and validate the firmware for the
+currently checked-out commit:
+
+```sh
+tools/download-firmware
+```
+
+Connect exactly one controller at a time. Double-tap reset so its `NICENANO`
+drive appears, then flash the side that controller will occupy:
+
+```sh
+tools/flash-firmware left
+tools/flash-firmware right
+```
+
+The flashing helper verifies that the selected file is a UF2 image, requires
+the nice!nano bootloader label and `INFO_UF2.TXT`, and refuses to continue if
+zero or multiple bootloader drives are present. Add `--dry-run` to inspect a
+connected controller without copying anything, for example
+`tools/flash-firmware left --dry-run`.
+
 To flash one half, connect it over USB, double-tap that half's physical reset
 button, and wait for the nice!nano bootloader drive to appear. Copy the UF2
 for that half to the root of the drive. It will unmount and reboot itself.
@@ -46,6 +67,14 @@ Flash the right UF2 to the right half and the left UF2 to the left half.
 The left half is the split central: it advertises to the computer and runs
 the keymap. The right half is a peripheral and talks only to the left half.
 After both have rebooted, pair the host with **Allium58**.
+
+For a pre-assembly smoke test, flash and test the left controller first. It
+should reboot as the USB keyboard. The right controller is not expected to
+emit keys over USB by itself; it is a split peripheral. Power both controllers
+and reset them together to let the two sides establish their wireless split
+connection. A bare controller test proves the bootloader, USB, MCU, and radio
+startup paths, but it cannot test the key matrix or displays until those parts
+are connected.
 
 On Adjust, the first key clears the current Bluetooth profile and the next
 five keys select profiles 1 through 5. If pairing becomes confused, forget

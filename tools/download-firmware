@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+output_dir=${1:-"$repo_root/firmware"}
+repository=ChazRowe/zmk-config
+
+for command in gh git file sha256sum; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        printf 'Missing required command: %s\n' "$command" >&2
+        exit 1
+    fi
+done
+
+head_sha=$(git -C "$repo_root" rev-parse HEAD)
+run_record=$(
+    gh run list \
+        --repo "$repository" \
+        --workflow "Build ZMK firmware" \
+        --branch main \
+        --commit "$head_sha" \
+        --status success \
+        --limit 1 \
+        --json databaseId,url \
+        --jq '.[0] | [.databaseId, .url] | @tsv'
+)
+
+if [[ -z "$run_record" ]]; then
+    printf 'No successful firmware build exists for commit %s.\n' "$head_sha" >&2
+    printf 'Check https://github.com/%s/actions and try again after the build succeeds.\n' \
+        "$repository" >&2
+    exit 1
+fi
+
+IFS=$'\t' read -r run_id run_url <<<"$run_record"
+download_dir=$(mktemp -d /tmp/allium58-firmware-download.XXXXXX)
+trap 'rm -rf -- "$download_dir"' EXIT
+
+printf 'Downloading firmware from %s\n' "$run_url"
+gh run download \
+    --repo "$repository" \
+    "$run_id" \
+    --name firmware \
+    --dir "$download_dir"
+
+firmware_files=(
+    allium58_left_niceview.uf2
+    allium58_right_niceview.uf2
+    settings_reset.uf2
+)
+
+for firmware_name in "${firmware_files[@]}"; do
+    firmware_path="$download_dir/$firmware_name"
+    if [[ ! -f "$firmware_path" ]]; then
+        printf 'Build artifact is missing %s.\n' "$firmware_name" >&2
+        exit 1
+    fi
+    if ! file --brief "$firmware_path" | grep -q '^UF2 firmware image'; then
+        printf '%s is not a recognized UF2 firmware image.\n' "$firmware_name" >&2
+        exit 1
+    fi
+done
+
+mkdir -p -- "$output_dir"
+for firmware_name in "${firmware_files[@]}"; do
+    install -m 0644 \
+        "$download_dir/$firmware_name" \
+        "$output_dir/$firmware_name"
+done
+
+printf '\nFirmware saved in %s:\n' "$output_dir"
+sha256sum "${firmware_files[@]/#/$output_dir/}"

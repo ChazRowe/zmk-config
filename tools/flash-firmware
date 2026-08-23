@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    cat >&2 <<'EOF'
+Usage: tools/flash-firmware <left|right|reset> [--dry-run] [firmware-directory]
+
+Connect exactly one nice!nano, double-tap reset to expose its NICENANO drive,
+then select the firmware intended for that controller.
+EOF
+    exit 2
+}
+
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+side=${1:-}
+firmware_dir="$repo_root/firmware"
+firmware_dir_set=false
+dry_run=false
+
+if (( $# > 0 )); then
+    shift
+fi
+
+while (( $# > 0 )); do
+    case "$1" in
+        --dry-run)
+            dry_run=true
+            ;;
+        *)
+            if $firmware_dir_set; then
+                usage
+            fi
+            firmware_dir=$1
+            firmware_dir_set=true
+            ;;
+    esac
+    shift
+done
+
+case "$side" in
+    left)
+        firmware_name=allium58_left_niceview.uf2
+        ;;
+    right)
+        firmware_name=allium58_right_niceview.uf2
+        ;;
+    reset)
+        firmware_name=settings_reset.uf2
+        ;;
+    *)
+        usage
+        ;;
+esac
+
+for command in file findmnt lsblk udisksctl; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        printf 'Missing required command: %s\n' "$command" >&2
+        exit 1
+    fi
+done
+
+firmware_path="$firmware_dir/$firmware_name"
+if [[ ! -f "$firmware_path" ]]; then
+    printf 'Firmware not found: %s\n' "$firmware_path" >&2
+    printf 'Run tools/download-firmware first.\n' >&2
+    exit 1
+fi
+if ! file --brief "$firmware_path" | grep -q '^UF2 firmware image'; then
+    printf 'Refusing to flash an unrecognized file: %s\n' "$firmware_path" >&2
+    exit 1
+fi
+
+mapfile -t devices < <(
+    lsblk -nrpo PATH,LABEL | awk '$2 == "NICENANO" { print $1 }'
+)
+
+if (( ${#devices[@]} == 0 )); then
+    printf 'No NICENANO bootloader drive found.\n' >&2
+    printf 'Connect one controller and double-tap its reset button, or briefly bridge RST to GND twice.\n' >&2
+    exit 1
+fi
+if (( ${#devices[@]} > 1 )); then
+    printf 'More than one NICENANO drive is connected; disconnect all but the intended controller.\n' >&2
+    printf 'Detected devices:\n' >&2
+    printf '  %s\n' "${devices[@]}" >&2
+    exit 1
+fi
+
+device=${devices[0]}
+mountpoint=$(findmnt -nr -S "$device" -o TARGET || true)
+if [[ -z "$mountpoint" ]]; then
+    udisksctl mount -b "$device" >/dev/null
+    mountpoint=$(findmnt -nr -S "$device" -o TARGET || true)
+fi
+if [[ -z "$mountpoint" || ! -d "$mountpoint" ]]; then
+    printf 'Could not mount NICENANO device %s.\n' "$device" >&2
+    exit 1
+fi
+if [[ ! -f "$mountpoint/INFO_UF2.TXT" ]]; then
+    printf 'Refusing to write: %s lacks INFO_UF2.TXT.\n' "$mountpoint" >&2
+    exit 1
+fi
+
+printf 'Controller: %s mounted at %s\n' "$device" "$mountpoint"
+sed -n '1,6p' "$mountpoint/INFO_UF2.TXT"
+printf 'Selected:   %s firmware (%s)\n' "$side" "$firmware_path"
+
+if $dry_run; then
+    printf 'Dry run complete; nothing was copied.\n'
+    exit 0
+fi
+
+printf 'Flashing %s...\n' "$firmware_name"
+cp -- "$firmware_path" "$mountpoint/$firmware_name"
+sync
+printf 'Copy completed. The controller should reboot and the NICENANO drive should disappear.\n'
