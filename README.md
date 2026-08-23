@@ -23,8 +23,11 @@ not typing keys.
 - Both keys below the displays hold
   `Left Shift+Left Ctrl+Left GUI+Left Alt+Right Alt+Right Shift` as a Meta
   chord.
-- The eight low-profile keys emit that Meta chord plus F1 through F8,
-  from left to right.
+- The first seven low-profile keys emit that Meta chord plus F1 through F7,
+  from left to right. The outermost lower-right thumb key is right GUI
+  (Super/Windows).
+- Numpad uses ordinary number and punctuation keycodes arranged as a keypad,
+  matching the Planck map; its behavior does not depend on host Num Lock.
 
 The full, position-by-position map is documented beside the bindings in
 [`config/lily58.keymap`](config/lily58.keymap).
