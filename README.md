@@ -23,9 +23,9 @@ not typing keys.
 - Both keys below the displays hold
   `Left Shift+Left Ctrl+Left GUI+Left Alt+Right Alt+Right Shift` as a Meta
   chord.
-- The first seven low-profile keys emit that Meta chord plus F1 through F7,
-  from left to right. The outermost lower-right thumb key is right GUI
-  (Super/Windows).
+- Seven low-profile keys emit that Meta chord plus F1-F3 and F5-F8. The
+  outermost lower-right thumb key is right GUI (Super/Windows); on the
+  Allium58 matrix it occupies the fourth low-profile binding position.
 - Numpad uses ordinary number and punctuation keycodes arranged as a keypad,
   matching the Planck map; its behavior does not depend on host Num Lock.
 
