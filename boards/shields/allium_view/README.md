@@ -18,3 +18,7 @@ screen and attaches the appropriate widget for each half.
 
 Both firmware targets select this shield after `nice_view_adapter`; the
 upstream ZMK source remains an external build dependency.
+
+The battery bars are deliberately conservative: the lowest 25% reported by
+ZMK is reserved, so a measured level of 25% or less is drawn as empty. Adjust
+`DISPLAY_BATTERY_RESERVE_PERCENT` in `widgets/util.c` to change the reserve.

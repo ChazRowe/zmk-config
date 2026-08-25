@@ -10,6 +10,17 @@
 
 LV_IMG_DECLARE(bolt);
 
+#define DISPLAY_BATTERY_RESERVE_PERCENT 25
+
+static uint8_t display_battery_level(uint8_t measured_level) {
+    if (measured_level <= DISPLAY_BATTERY_RESERVE_PERCENT) {
+        return 0;
+    }
+
+    return (measured_level - DISPLAY_BATTERY_RESERVE_PERCENT) * 100 /
+           (100 - DISPLAY_BATTERY_RESERVE_PERCENT);
+}
+
 void rotate_canvas(lv_obj_t *canvas, lv_color_t cbuf[]) {
     static lv_color_t cbuf_tmp[CANVAS_SIZE * CANVAS_SIZE];
     memcpy(cbuf_tmp, cbuf, sizeof(cbuf_tmp));
@@ -25,6 +36,8 @@ void rotate_canvas(lv_obj_t *canvas, lv_color_t cbuf[]) {
 }
 
 void draw_battery(lv_obj_t *canvas, const struct status_state *state) {
+    uint8_t battery_level = display_battery_level(state->battery);
+
     lv_draw_rect_dsc_t rect_black_dsc;
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
     lv_draw_rect_dsc_t rect_white_dsc;
@@ -32,7 +45,7 @@ void draw_battery(lv_obj_t *canvas, const struct status_state *state) {
 
     lv_canvas_draw_rect(canvas, 0, 2, 29, 12, &rect_white_dsc);
     lv_canvas_draw_rect(canvas, 1, 3, 27, 10, &rect_black_dsc);
-    lv_canvas_draw_rect(canvas, 2, 4, (state->battery + 2) / 4, 8, &rect_white_dsc);
+    lv_canvas_draw_rect(canvas, 2, 4, (battery_level + 2) / 4, 8, &rect_white_dsc);
     lv_canvas_draw_rect(canvas, 30, 5, 3, 6, &rect_white_dsc);
     lv_canvas_draw_rect(canvas, 31, 6, 1, 4, &rect_black_dsc);
 
