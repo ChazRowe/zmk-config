@@ -1,0 +1,7 @@
+file_format: "1"
+id: allium_view
+name: Allium58 custom nice!view
+type: shield
+requires: [nice_view_header]
+features:
+  - display
