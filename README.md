@@ -23,9 +23,10 @@ not typing keys.
 - Both keys below the displays hold
   `Left Shift+Left Ctrl+Left GUI+Left Alt+Right Alt+Right Shift` as a Meta
   chord.
-- Seven low-profile keys emit that Meta chord plus F1-F3 and F5-F8. The
-  outermost lower-right thumb key is right GUI (Super/Windows); on the
-  Allium58 matrix it occupies the fourth low-profile binding position.
+- Six low-profile keys emit that Meta chord plus F1-F2 and F5-F8. The third
+  low-profile key sends a plain `F13` for use as the Typeless dictation
+  hotkey. The outermost lower-right thumb key is right GUI (Super/Windows);
+  on the Allium58 matrix it occupies the fourth low-profile binding position.
 - Numpad uses ordinary number and punctuation keycodes arranged as a keypad,
   matching the Planck map; its behavior does not depend on host Num Lock.
 
