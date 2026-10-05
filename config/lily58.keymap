@@ -23,9 +23,10 @@
  * macro keys: left Shift+Control+GUI+Alt, right Alt+Shift, plus an F key.
  * On the Allium58, the outermost lower-right thumb switch occupies the
  * fourth low-profile binding position and remains a conventional right GUI
- * key. The third low-profile key sends a plain F13 instead of the chord:
+ * key. The third low-profile key sends a plain F19 instead of the chord:
  * Typeless (push-to-talk dictation) only accepts single keys or simple
- * combos as its hotkey, and F13 is otherwise unused.
+ * combos as its hotkey. F19 has no keysym in the default XKB keymap and no
+ * GNOME binding; F13 maps to XF86Tools, which GNOME binds to Settings.
  */
 #define CHAZ_META(key) LS(LC(LG(LA(RA(RS(key))))))
 #define CHAZ_META_MOD LS(LC(LG(LA(RA(RSHFT)))))
@@ -81,20 +82,20 @@
 // Planck rows are shifted onto the top four Lily58 rows. The two keys under
 // the displays hold Chaz's six-modifier Meta chord. The low-profile thumb
 // Six low-profile thumb keys send that chord plus F1-F2 and F5-F8; the third
-// sends a plain F13 (Typeless hotkey) and the Allium58's outermost
+// sends a plain F19 (Typeless hotkey) and the Allium58's outermost
 // lower-right key is right GUI (Super/Windows).
 // ------------------------------------------------------------------------------------------------------------
 // | TAB  |  '   |  ,   |  .   |  P   |  Y   |                   |  F   |  G   |  C   |  R   |  L   | ESC       |
 // | BSPC |  A   |  O   |  E   |  U   |  I   |                   |  D   |  H   |  T   |  N   |  S   | /         |
 // | LSHF |  ;   |  Q   |  J   |  K   |  X   |                   |  B   |  M   |  W   |  V   |  Z   | RSHF/ENT  |
 // | LCTL | LGUI | LALT | LALT | LOWER| SPC/NP|   META   | | META | SPACE| RAISE| LEFT | DOWN | UP   | RCTL/RIGHT|
-//                             | M+F1 | M+F2 | F13  | RGUI | | M+F5 | M+F6 | M+F7 | M+F8 |
+//                             | M+F1 | M+F2 | F19  | RGUI | | M+F5 | M+F6 | M+F7 | M+F8 |
             bindings = <
 &kp TAB   &kp SQT  &kp COMMA &kp DOT &kp P &kp Y                            &kp F &kp G &kp C &kp R &kp L &kp ESC
 &kp BSPC  &kp A    &kp O     &kp E   &kp U &kp I                            &kp D &kp H &kp T &kp N &kp S &kp FSLH
 &kp LSHFT &kp SEMI &kp Q     &kp J   &kp K &kp X                            &kp B &kp M &kp W &kp V &kp Z &mt RSHIFT ENTER
 &kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
-                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F13 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
+                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F19 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
             >;
         };
 
@@ -109,7 +110,7 @@
 &kp BSPC  &kp A    &kp S    &kp D    &kp F    &kp G                         &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp SQT
 &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B                         &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &mt RSHIFT ENTER
 &kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
-                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F13 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
+                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F19 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
             >;
         };
 
@@ -124,7 +125,7 @@
 &kp BSPC  &kp A    &kp R    &kp S    &kp T    &kp D                         &kp H     &kp N     &kp E     &kp I     &kp O     &kp SQT
 &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B                         &kp K     &kp M     &kp COMMA &kp DOT   &kp FSLH  &mt RSHIFT ENTER
 &kp LCTRL &kp LGUI &kp LALT &kp LALT &mo LOWER &num_space NUMPAD SPACE &kp CHAZ_META_MOD &kp CHAZ_META_MOD &kp SPACE &mo RAISE &kp LEFT &kp DOWN &kp UP &mt RCTRL RIGHT
-                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F13 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
+                              &kp CHAZ_META(F1) &kp CHAZ_META(F2) &kp F19 &kp RGUI &kp CHAZ_META(F5) &kp CHAZ_META(F6) &kp CHAZ_META(F7) &kp CHAZ_META(F8)
             >;
         };
 
